@@ -1,0 +1,61 @@
+def stock_portfolio():
+    # Hard-coded dictionary of stock prices (per share)
+    stock_prices = {
+        "TCS": 3500,
+        "INFY": 1600,
+        "RELIANCE": 2800,
+        "HDFC": 1700,
+        "WIPRO": 450
+    }
+    
+    portfolio = {}  # to store user’s stocks and quantities
+    total_investment = 0
+    
+    print("Welcome to Stock Portfolio Tracker!")
+    print("Available stocks:", ", ".join(stock_prices.keys()))
+    
+    while True:
+        stock = input("Enter stock name (or type 'done' to finish): ").upper()
+        if stock == "DONE":
+            break
+        if stock not in stock_prices:
+            print("Stock not found. Please choose from available list.")
+            continue
+        
+        try:
+            qty = int(input(f"Enter quantity of {stock}: "))
+        except ValueError:
+            print("Invalid quantity. Please enter a number.")
+            continue
+        
+        portfolio[stock] = portfolio.get(stock, 0) + qty
+        total_investment += stock_prices[stock] * qty
+    
+    # Display results
+    print("\nYour Portfolio:")
+    for stock, qty in portfolio.items():
+        print(f"{stock}: {qty} shares @ {stock_prices[stock]} each")
+    print(f"\nTotal Investment: ₹{total_investment}")
+    
+    # Optionally save to files
+    save_choice = input("Do you want to save portfolio to file? (yes/no): ").lower()
+    if save_choice == "yes":
+        # Save to .txt
+        with open("portfolio.txt", "w") as txt_file:
+            txt_file.write("Stock Portfolio\n")
+            for stock, qty in portfolio.items():
+                txt_file.write(f"{stock}: {qty} shares @ {stock_prices[stock]} each\n")
+            txt_file.write(f"Total Investment: ₹{total_investment}\n")
+        
+        # Save to .csv
+        with open("portfolio.csv", "w") as csv_file:
+            csv_file.write("Stock,Quantity,Price,Total\n")
+            for stock, qty in portfolio.items():
+                total = stock_prices[stock] * qty
+                csv_file.write(f"{stock},{qty},{stock_prices[stock]},{total}\n")
+            csv_file.write(f"Total Investment,,,{total_investment}\n")
+        
+        print("Portfolio saved to portfolio.txt and portfolio.csv")
+
+# Run the tracker
+stock_portfolio()
